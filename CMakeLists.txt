@@ -53,7 +53,7 @@ add_executable(simLab ${sources} ${headers})
 
 	set(LINK_LIBRARIES
 
-  ${ROOT_LIBRARIES} -lThread -lHtml -lGed -lEG -lGeom 
+  ${ROOT_LIBRARIES} -lThread -lGed -lEG -lGeom 
 
 )
 
