@@ -35,7 +35,14 @@ class TLab : public TObject{
   Float_t GetPedestal(Int_t);
   Int_t   DefaultPedestalRun();
   
+  void    SetPhotopeaks();
+  void    InitPhotopeaks();
+
+  Int_t   GetMinQ(Int_t);
+  Int_t   GetMaxQ(Int_t);
+  
   void    FitPhotopeaks();
+  
   Float_t GetPhotopeak(Int_t);
   Int_t   DefaultPhotopeakRun(Int_t);
   
@@ -74,7 +81,9 @@ class TLab : public TObject{
   
   // OR, AND, OR
   const static Int_t nRuns = 3;
-  
+
+  Bool_t oneRun = kFALSE;
+    
   // crystals per array
   static const Int_t nCrystals = 9;
   
@@ -106,6 +115,8 @@ class TLab : public TObject{
   Int_t runNumberInt;
   TString simRun;
   TString simRunU;
+  
+
 
   ifstream *inData;
 
@@ -124,7 +135,20 @@ class TLab : public TObject{
   TCanvas *canvas2;
   
   // Raw data
-  TH1F   *hQ[nChannels][nRuns];
+  //TH1F   *hQ[nChannels][nRuns];
+  
+  // pre-run OR data
+  TH1F   *hQ_0[nChannels];
+  
+  // main run
+  TH1F   *hQ_1[nChannels];
+  
+  // main run outer summed with inner
+  TH1F   *hQQ_1[nChannels];
+  
+  // post-run OR data
+  TH1F   *hQ_2[nChannels];
+  
   TH1F   *hT[nChannels];
 
   Long64_t eventNumber;

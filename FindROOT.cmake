@@ -76,7 +76,7 @@ else()
 
   #set(ROOT_LIBRARIES ${ROOT_LIBRARIES} -lProofPlayer -lMLP -lSpectrum -lEve -lRGL -lGed -lXMLParser -lPhysics)
 
-  set(ROOT_LIBRARIES ${ROOT_LIBRARIES} -lThread -lHtml -lGed -lEG -lGeom)		
+  set(ROOT_LIBRARIES ${ROOT_LIBRARIES} -lThread  -lGed -lEG -lGeom)		
 
   set(ROOT_LIBRARY_DIR ${ROOTSYS}/lib)	      
 
