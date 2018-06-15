@@ -35,6 +35,8 @@ class TLab : public TObject{
   Float_t GetPedestal(Int_t);
   Int_t   DefaultPedestalRun();
   
+  void    FillQSumHistos();
+  
   void    SetPhotopeaks();
   void    InitPhotopeaks();
 
@@ -46,6 +48,8 @@ class TLab : public TObject{
   Float_t GetPhotopeak(Int_t);
   Int_t   DefaultPhotopeakRun(Int_t);
   
+  Bool_t QIsInComptonRange(Float_t, Int_t);
+
   Bool_t GoodTiming(Float_t);
   Bool_t GoodTheta(Float_t);
 
@@ -88,6 +92,7 @@ class TLab : public TObject{
   static const Int_t nCrystals = 9;
   
   // only five per array are recorded
+  //static const Int_t nChannels = 18;
   static const Int_t nChannels = 10;
   
   // For Graphing
@@ -112,12 +117,12 @@ class TLab : public TObject{
   Float_t plotTheta[nThBins]; 
   Float_t AsymMatrix[nThBins][nPhiBins];
   
+  //Float_t comp
+  
   Int_t runNumberInt;
   TString simRun;
   TString simRunU;
   
-
-
   ifstream *inData;
 
   TFile  *rootFileRawData;
