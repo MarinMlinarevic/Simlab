@@ -448,7 +448,7 @@ Int_t TLab::Chan2ArrayA(Int_t channel){
 
   // for new setup with 18 channels (including corner crystals)
   // and no timing information
-  crystal = channel
+  crystal = channel;
   /*
   if     (channel == 0)
     crystal = 1;
