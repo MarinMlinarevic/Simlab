@@ -395,6 +395,7 @@ void TLab::MakeRawDataTreeFile(){
 Bool_t TLab::QIsInComptonRange(Float_t Q, Int_t ch){
   
   // run 501
+  /*
   switch(ch){
   case 0  : if( Q > 900  && Q < 2300 ) return kTRUE;
   case 1  : if( Q > 900  && Q < 2300 ) return kTRUE;
@@ -406,6 +407,29 @@ Bool_t TLab::QIsInComptonRange(Float_t Q, Int_t ch){
   case 7  : if( Q > 900  && Q < 2300 ) return kTRUE;
   case 8  : if( Q > 900  && Q < 2300 ) return kTRUE;
   case 9  : if( Q > 1000 && Q < 2400 ) return kTRUE;
+  }
+  */
+
+  // run 498
+  switch(ch){
+  case 0  : if( Q > 900  && Q < 2300 ) return kTRUE;
+  case 1  : if( Q > 900  && Q < 2300 ) return kTRUE;
+  case 2  : if( Q > 800  && Q < 2400 ) return kTRUE;
+  case 3  : if( Q > 900  && Q < 2600 ) return kTRUE;
+  case 4  : if( Q > 1000 && Q < 2400 ) return kTRUE;
+  case 5  : if( Q > 1000 && Q < 2400 ) return kTRUE;
+  case 6  : if( Q > 900  && Q < 2400 ) return kTRUE;
+  case 7  : if( Q > 900  && Q < 2300 ) return kTRUE;
+  case 8  : if( Q > 900  && Q < 2300 ) return kTRUE;
+  case 9  : if( Q > 1000 && Q < 2400 ) return kTRUE;
+  case 10 : if( Q > 900  && Q < 2300 ) return kTRUE;
+  case 11 : if( Q > 800  && Q < 2400 ) return kTRUE;
+  case 12 : if( Q > 900  && Q < 2600 ) return kTRUE;
+  case 13 : if( Q > 1000 && Q < 2400 ) return kTRUE;
+  case 14 : if( Q > 1000 && Q < 2400 ) return kTRUE;
+  case 15 : if( Q > 900  && Q < 2400 ) return kTRUE;
+  case 16 : if( Q > 900  && Q < 2300 ) return kTRUE;
+  case 17 : if( Q > 900  && Q < 2300 ) return kTRUE;
   }
 
   return kFALSE;
@@ -524,7 +548,7 @@ void TLab::MakeCalibratedDataTreeFile(){
   TString tempString = ""; 
   
   rawDataTree->SetBranchAddress("Q",Q);
-  rawDataTree->SetBranchAddress("T",T);
+  //rawDataTree->SetBranchAddress("T",T);
   rawDataTree->SetBranchAddress("eventNumber",&eventNumber);
   
   calDataTree->Branch("eventNumber",
@@ -549,11 +573,12 @@ void TLab::MakeCalibratedDataTreeFile(){
   tempString.Form("tHBErr[%d]/F",nCrystals);
   calDataTree->Branch("tHBErr",tHBErr,tempString);
   
-  tempString.Form("TA[%d]/F",nCrystals);
-  calDataTree->Branch("TA",TA,tempString);
+  // not needed if no TDC data
+  //tempString.Form("TA[%d]/F",nCrystals);
+  //calDataTree->Branch("TA",TA,tempString);
 
-  tempString.Form("TB[%d]/F",nCrystals);
-  calDataTree->Branch("TB",TB,tempString);
+  //tempString.Form("TB[%d]/F",nCrystals);
+  //calDataTree->Branch("TB",TB,tempString);
   
   TString plotNameA  = "";
   TString plotTitleA = "";
@@ -585,8 +610,9 @@ void TLab::MakeCalibratedDataTreeFile(){
     tHAErr[i] = 0.;
     tHB[i] = 0.;
     tHBErr[i] = 0.;
-    TA[i]  = 0.;
-    TB[i]  = 0.;
+    // not needed if no TDC data
+    //TA[i]  = 0.;
+    //TB[i]  = 0.;
     
     // not used
     QA[i]  = 0.;
@@ -606,7 +632,7 @@ void TLab::MakeCalibratedDataTreeFile(){
     
     rawDataTree->GetEntry(i);
     
-    for (Int_t k = 0 ; k < 5 ; k++){ 
+    for (Int_t k = 0 ; k < 9 ; k++){ 
 
       QA_temp    = 0.;
       QB_temp    = 0.;
@@ -625,8 +651,8 @@ void TLab::MakeCalibratedDataTreeFile(){
       cryB = Chan2ArrayB(chaB);
       
       // to do: time calibration
-      TA[cryA]  = T[chaA];
-      TB[cryB]  = T[chaB];
+      //TA[cryA]  = T[chaA];
+      //TB[cryB]  = T[chaB];
       
       // Energy Arrays 
       // Set to use OR data after AND data
@@ -659,8 +685,8 @@ void TLab::MakeCalibratedDataTreeFile(){
     tHA[4] = ElectronEnergyToTheta(EA[4]);
     tHB[4] = ElectronEnergyToTheta(EB[4]);
 
-    tHAErr[4] = ThetaToThetaError(tHA[4],2);
-    tHBErr[4] = ThetaToThetaError(tHB[4],7);
+    tHAErr[4] = ThetaToThetaError(tHA[4],4);
+    tHBErr[4] = ThetaToThetaError(tHB[4],13);
     
     // Create Energy Histos
     for( Int_t j = 0 ; j < nCrystals ; j++ ) {
@@ -804,14 +830,14 @@ void TLab::FillQSumHistos(){
 
     for( Int_t ch = 0 ; ch < nChannels ; ch++ ){
 
-      centralIndex = 2;
+      centralIndex = 4;
       
-      if( ch > 4 )
-	centralIndex = 7;
+      if( ch > 8 )
+	centralIndex = 13;
       
       Q_sum = Q[ch] + Q[centralIndex] - GetPedestal(centralIndex);
 
-      if   ( ch == 2 || ch == 7 ) 
+      if   ( ch == 4 || ch == 13 ) 
 	hQQ_1[ch]->Fill(Q[ch]);
       else if( QIsInComptonRange(Q[ch],ch) &&
 	       QIsInComptonRange(Q[centralIndex],centralIndex) ){
@@ -861,6 +887,7 @@ void TLab::InitPhotopeaks(){
   if( oneRun ){
     
     cout << endl;
+    /*
     cout << " Using run 501 values " << endl;
     
     phoQ[0][1] = 2610., phoQ[1][1] = 2603.;
@@ -868,6 +895,18 @@ void TLab::InitPhotopeaks(){
     phoQ[4][1] = 2740., phoQ[5][1] = 2821.;
     phoQ[6][1] = 2660., phoQ[7][1] = 2628.; 
     phoQ[8][1] = 2600., phoQ[9][1] = 2761.; 
+    */
+    cout << " Using run 498 values " << endl;
+    
+    phoQ[0][1]  = 2610., phoQ[1][1]  = 2603.;
+    phoQ[2][1]  = 2757., phoQ[3][1]  = 2894.;
+    phoQ[4][1]  = 2740., phoQ[5][1]  = 2821.;
+    phoQ[6][1]  = 2660., phoQ[7][1]  = 2628.;
+    phoQ[8][1]  = 2600., phoQ[9][1]  = 2761.;
+    phoQ[10][1] = 2610., phoQ[11][1] = 2603.;
+    phoQ[12][1] = 2757., phoQ[13][1] = 2894.;
+    phoQ[14][1] = 2740., phoQ[15][1] = 2821.;
+    phoQ[16][1] = 2660., phoQ[17][1] = 2628.;
   }
   
 }
@@ -893,9 +932,9 @@ Int_t TLab::GetMinQ(Int_t ch){
 
   if     ( runNumberInt == 49801 ){
     
-    if     (ch == 2)
+    if     (ch == 4)
       minQ = 1999;
-    else if(ch == 7)
+    else if(ch == 13)
       minQ = 2001;
     
   }
@@ -910,9 +949,9 @@ Int_t TLab::GetMaxQ(Int_t ch){
 
   if     ( runNumberInt == 49801 ){
     
-    if     (ch == 2)
+    if     (ch == 4)
       maxQ = 4499;
-    else if(ch == 7)
+    else if(ch == 13)
       maxQ = 4501;
     
   }
@@ -1087,8 +1126,8 @@ Int_t TLab::DefaultPedestalRun(){
 
 Int_t TLab::DefaultPhotopeakRun(Int_t channel){  
   
-  if( channel == 2  || 
-      channel == 7  ||
+  if( channel == 4  || 
+      channel == 13  ||
       oneRun)
     return 1;
   else  
@@ -1116,13 +1155,13 @@ Float_t TLab::ThetaToThetaError(Float_t theta,
   Float_t theta_min  = 0.;
   Float_t theta_max  = 0.;
   
-  // Channels 2 and 7 correspond to central crystals
+  // Channels 4 and 13 correspond to central crystals
   
   // This function calculates the theta difference
   // at energy +- HWHM and returns the largest 
   // value as theta error
-  if ( (channel!=2) &&
-       (channel!=7) ){
+  if ( (channel!=4) &&
+       (channel!=13) ){
     energy     = ThetaToPhotonEnergy(theta);
     energy_max = energy + EnergyRes*Sqrt(energy);
     theta_min  = theta  - PhotonEnergyToTheta(energy_max);
@@ -1202,8 +1241,9 @@ void TLab::CalculateAsymmetry(){
   calDataTree->SetBranchAddress("tHAErr",tHAErr);
   calDataTree->SetBranchAddress("tHBErr",tHBErr);
   
-  calDataTree->SetBranchAddress("TA",&TA);
-  calDataTree->SetBranchAddress("TB",&TB);
+  // not needed if no TDC data
+  //calDataTree->SetBranchAddress("TA",&TA);
+  //calDataTree->SetBranchAddress("TB",&TB);
   
   Bool_t    A[nCrystals],  B[nCrystals];
   Long64_t nA[nCrystals], nB[nCrystals];
