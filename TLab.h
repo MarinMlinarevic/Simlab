@@ -91,9 +91,12 @@ class TLab : public TObject{
   // crystals per array
   static const Int_t nCrystals = 9;
   
-  // only five per array are recorded
-  //static const Int_t nChannels = 18;
-  static const Int_t nChannels = 10;
+  // use nChannels = 10 if only five per array are recorded
+  //static const Int_t nChannels = 10;
+
+  // use nChannels = 18 if all 9 channels in each array are recorded
+  static const Int_t nChannels = 18;
+  
   
   // For Graphing
   static const Int_t nPhiBins = 4;

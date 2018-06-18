@@ -166,13 +166,9 @@ void TLab::SetEventNumbers(Int_t run){
   //-------
   // Test with two files
   //-------
-  else if(run == 49801){
-    nOR1 = 0;
-    nAND = 29824032; //AND on
-    nOR2 = 0;
-    oneRun = kTRUE;
-  }
-  else if(run == 4980){
+  
+  // sorted using old sort10.f code
+    else if(run == 4980){
     nOR1 = 0;
     nAND = 500000; 
     nOR2 = 0;
@@ -181,6 +177,20 @@ void TLab::SetEventNumbers(Int_t run){
   else if(run == 5010){
     nOR1 = 0;
     nAND = 2792427; 
+    nOR2 = 0;
+    oneRun = kTRUE;
+  }
+
+  // sorted using new sort18.f code
+  else if(run == 49801){
+    nOR1 = 0;
+    nAND = 29824032; //AND on
+    nOR2 = 0;
+    oneRun = kTRUE;
+  }
+  else if(run == 50100){
+    nOR1 = 0;
+    nAND = 139466; 
     nOR2 = 0;
     oneRun = kTRUE;
   }
@@ -218,7 +228,8 @@ void TLab::MakeRawDataTreeFile(){
   
   for(Int_t i = 0 ; i < nChannels ; i++ ){
     Q[i] = 0.0;
-    T[i] = 0.0;
+    // Array T is not needed if there is no timing information
+    //T[i] = 0.0;
   }
   
   textFile = textFileName;
@@ -227,8 +238,14 @@ void TLab::MakeRawDataTreeFile(){
   inData = new ifstream(textFile);
   
   rootFileRawData = new TFile(rootFile,"RECREATE","Raw LYSO data");
+
+  // use if timing data is included
+  //rawDataTree     = new TTree("rawDataTree",
+	//		      "LYSO data QDC and TDC values");
+  
+  // use if timing data is not included
   rawDataTree     = new TTree("rawDataTree",
-			      "LYSO data QDC and TDC values");
+			      "LYSO data QDC values");
 
   rawDataTree->Branch("eventNumber",
 		      &eventNumber,
@@ -239,8 +256,9 @@ void TLab::MakeRawDataTreeFile(){
   tempString.Form("Q[%d]/F",nChannels);
   rawDataTree->Branch("Q",Q,tempString);
   
-  tempString.Form("T[%d]/F",nChannels);
-  rawDataTree->Branch("T",T,tempString);
+  // this part is not needed if timing information is not included
+  //tempString.Form("T[%d]/F",nChannels);
+  //rawDataTree->Branch("T",T,tempString);
   
   TString nameHist;
   TString titleHist;
@@ -276,10 +294,11 @@ void TLab::MakeRawDataTreeFile(){
     nameHist.Form("hQ_%d_%d",run,i);
     titleHist.Form("hQ_%d_%d;QDC bin;Counts",run,i);
     hQ_2[i] = new TH1F(nameHist,titleHist,4096,0,4096);
-      
-    nameHist.Form("hT%d",i);
-    titleHist.Form("hT%d;TDC bin;Counts",i);
-    hT[i] = new TH1F(nameHist,titleHist,5200,0,5200);
+    
+    // this part is not needed if timing information is not included
+    //nameHist.Form("hT%d",i);
+    //titleHist.Form("hT%d;TDC bin;Counts",i);
+    //hT[i] = new TH1F(nameHist,titleHist,5200,0,5200);
   }
   cout << endl;
   cout << " Making tree " << endl;
@@ -294,11 +313,10 @@ void TLab::MakeRawDataTreeFile(){
 	>> Q[2+index] 
 	>> Q[3+index]  
 	>> Q[4+index]  
-	>> T[0+index] 
-	>> T[1+index] 
-	>> T[2+index] 
-	>> T[3+index]  
-	>> T[4+index] 
+	>> Q[5+index] 
+	>> Q[6+index] 
+	>> Q[7+index] 
+	>> Q[8+index] 
 	){
 
     if(eventNumber==0){
@@ -313,17 +331,16 @@ void TLab::MakeRawDataTreeFile(){
 	   << Q[2+index] << " " 
 	   << Q[3+index] << " " 
 	   << Q[4+index] << " " 
-	   << T[0+index] << " " 
-	   << T[1+index] << " " 
-	   << T[2+index] << " " 
-	   << T[3+index] << " " 
-	   << T[4+index] << " " 
+	   << Q[5+index] << " " 
+	   << Q[6+index] << " " 
+	   << Q[7+index] << " " 
+	   << Q[8+index] << " " 
 	   << endl;
     }
 
-    // raw text file has event data over two lines  
-    // with five channels per line
-    for(Int_t i = index ; i < (index+5) ; i++ ){
+    // raw text file has event data over 2 lines  
+    // with 9 channels per line
+    for(Int_t i = index ; i < (index+9) ; i++ ){
     
       if(Q[i] > 4090. )
 	continue;
@@ -344,17 +361,18 @@ void TLab::MakeRawDataTreeFile(){
 	hQ_1[i]->Fill(Q[i]);
 	
       }
-      hT[i]->Fill(T[i]);
+      // not needed in no timing data
+      // hT[i]->Fill(T[i]);
       
     } // end of: for(Int_t i = 0 ; i < 16 ; i++ ...
     
-    if(index==5){
+    if(index==9){
       rawDataTree->Fill();
       eventNumber++;
     }
     
     if(index==0)
-      index = 5;
+      index = 9;
     else
       index = 0;
     
@@ -404,7 +422,10 @@ Int_t TLab::Chan2ArrayA(Int_t channel){
   
   Int_t crystal = -1;
 
-
+  // for new setup with 18 channels (including corner crystals)
+  // and no timing information
+  crystal = channel
+  /*
   if     (channel == 0)
     crystal = 1;
   else if(channel == 1)
@@ -415,6 +436,7 @@ Int_t TLab::Chan2ArrayA(Int_t channel){
     crystal = 5;
   else if(channel == 4)
     crystal = 7;
+  */
   
   return crystal;
 }
@@ -423,16 +445,24 @@ Int_t TLab::Chan2ArrayB(Int_t channel){
   
   Int_t crystal = -1;
   
-  if     (channel == 5)
+  if     (channel == 9)
+    crystal = 2;
+  else if(channel == 10)
     crystal = 1;
-  else if(channel == 6)
+  else if(channel == 11)
+    crystal = 0;
+  else if(channel == 12)
     crystal = 5;
-  else if(channel == 7)
+  else if(channel == 13)
     crystal = 4;
-  else if(channel == 8)
+  else if(channel == 14)
     crystal = 3;
-  else if(channel == 9)
+  else if(channel == 15)
+    crystal = 8;
+  else if(channel == 16)
     crystal = 7;
+  else if(channel == 17)
+    crystal = 6;
   
   return crystal;
 }
@@ -584,10 +614,10 @@ void TLab::MakeCalibratedDataTreeFile(){
       phoQA_temp = 0.;
       phoQB_temp = 0.;
       
-      // channels for A go from 0 - 4
+      // channels for A go from 0 - 8
       chaA = k;
-      // channels for B go from 5 - 9
-      chaB = (k+5);
+      // channels for B go from 9 - 17
+      chaB = (k+9);
       
       // crytals for A 
       cryA = Chan2ArrayA(chaA);
