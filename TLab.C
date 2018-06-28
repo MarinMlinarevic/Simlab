@@ -429,23 +429,23 @@ Bool_t TLab::QIsInComptonRange(Float_t Q, Int_t ch){
     //for data sorted using sort18.f (with 18 channels)
     //Q ranges need to be changed
     case 0  : if( lowQ > 1100 && highQ < 2200 ) return kTRUE; break;
-    case 1  : if( lowQ > 1050 && highQ < 2200 ) return kTRUE; break;
-    case 2  : if( lowQ >  900 && highQ < 2100 ) return kTRUE; break;
-    case 3  : if( lowQ > 1000 && highQ < 2400 ) return kTRUE; break;
-    case 4  : if( lowQ > 1100 && highQ < 2200 ) return kTRUE; break;
-    case 5  : if( lowQ > 1100 && highQ < 2300 ) return kTRUE; break;
+    case 1  : if( lowQ > 1250 && highQ < 2400 ) return kTRUE; break;
+    case 2  : if( lowQ > 1050 && highQ < 2200 ) return kTRUE; break;
+    case 3  : if( lowQ > 1350 && highQ < 2400 ) return kTRUE; break;
+    case 4  : if( lowQ >  900 && highQ < 2100 ) return kTRUE; break;
+    case 5  : if( lowQ > 1400 && highQ < 2400 ) return kTRUE; break;
     case 6  : if( lowQ > 1000 && highQ < 2400 ) return kTRUE; break;
-    case 7  : if( lowQ > 900  && highQ < 2200 ) return kTRUE; break;
-    case 8  : if( lowQ > 975  && highQ < 2200 ) return kTRUE; break;
-    case 9  : if( lowQ > 1000 && highQ < 2300 ) return kTRUE; break;
-    case 10 : if( lowQ > 1100 && highQ < 2200 ) return kTRUE; break;
-    case 11 : if( lowQ > 1050 && highQ < 2200 ) return kTRUE; break;
-    case 12 : if( lowQ >  900 && highQ < 2100 ) return kTRUE; break;
-    case 13 : if( lowQ > 1000 && highQ < 2400 ) return kTRUE; break;
-    case 14 : if( lowQ > 1100 && highQ < 2200 ) return kTRUE; break;
-    case 15 : if( lowQ > 1100 && highQ < 2300 ) return kTRUE; break;
-    case 16 : if( lowQ > 1000 && highQ < 2400 ) return kTRUE; break;
-    case 17 : if( lowQ > 900  && highQ < 2200 ) return kTRUE; break;
+    case 7  : if( lowQ > 1350 && highQ < 2400 ) return kTRUE; break;
+    case 8  : if( lowQ > 1100 && highQ < 2200 ) return kTRUE; break;
+    case 9  : if( lowQ > 1100 && highQ < 2300 ) return kTRUE; break;
+    case 10 : if( lowQ > 1400 && highQ < 2400 ) return kTRUE; break;
+    case 11 : if( lowQ > 1000 && highQ < 2400 ) return kTRUE; break;
+    case 12 : if( lowQ > 1400 && highQ < 2800 ) return kTRUE; break;
+    case 13 : if( lowQ > 900  && highQ < 2200 ) return kTRUE; break;
+    case 14 : if( lowQ > 1450 && highQ < 2500 ) return kTRUE; break;
+    case 15 : if( lowQ > 975  && highQ < 2200 ) return kTRUE; break;
+    case 16 : if( lowQ > 1400 && highQ < 2500 ) return kTRUE; break;
+    case 17 : if( lowQ > 1000 && highQ < 2300 ) return kTRUE; break;
     }
   }
   else if(runNumberInt==1470  ||
