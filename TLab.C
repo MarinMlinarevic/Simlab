@@ -794,9 +794,9 @@ void TLab::SetPedestals(){
     // central channels may have no pedestal 
     if( pedQ[i][run] > 800.){
       
-      if     (i==2)
+      if     (i==4)
 	pedQ[i][run] = 609.0;
-      else if(i==7)
+      else if(i==13)
 	pedQ[i][run] = 633.0;
 
     }
