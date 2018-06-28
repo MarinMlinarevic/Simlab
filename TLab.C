@@ -213,6 +213,20 @@ void TLab::SetEventNumbers(Int_t run){
     nOR2 = 0;
     oneRun = kTRUE;
   }
+
+    else if(run == 49803){
+    nOR1 = 0;
+    nAND = 50000000; 
+    nOR2 = 0;
+    oneRun = kTRUE;
+  }
+      else if(run == 498009){
+    nOR1 = 0;
+    nAND = 149120032; 
+    nOR2 = 0;
+    oneRun = kTRUE;
+  }
+
   else{
 
     cout << endl;
