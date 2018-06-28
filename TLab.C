@@ -168,6 +168,12 @@ void TLab::SetEventNumbers(Int_t run){
   //-------
   
   // sorted using old sort10.f code
+    else if(run == 49801){
+    nOR1 = 0;
+    nAND = 29824032; //AND on
+    nOR2 = 0;
+    oneRun = kTRUE;
+  }
     else if(run == 4980){
     nOR1 = 0;
     nAND = 500000; 
@@ -182,12 +188,7 @@ void TLab::SetEventNumbers(Int_t run){
   }
 
   // sorted using new sort18.f code
-  else if(run == 49801){
-    nOR1 = 0;
-    nAND = 29824032; //AND on
-    nOR2 = 0;
-    oneRun = kTRUE;
-  }
+
   else if(run == 50100){
     nOR1 = 0;
     nAND = 139466; 
