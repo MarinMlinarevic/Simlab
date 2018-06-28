@@ -975,27 +975,23 @@ void TLab::InitPhotopeaks(){
   }
   else if( oneRun ){
     cout << endl;
+    cout << " Using run 501 values " << endl;
+    // should be okay for run 498
     /*
-    //cout << " Using run 501 values " << endl;
-    
     phoQ[0][1] = 2596., phoQ[1][1] = 2625.;
     phoQ[2][1] = 2763., phoQ[3][1] = 2902.;
     phoQ[4][1] = 2728., phoQ[5][1] = 2800.;
     phoQ[6][1] = 2656., phoQ[7][1] = 2629.; 
     phoQ[8][1] = 2588., phoQ[9][1] = 2742.; 
     */
-    cout << " Using run 498 values " << endl;
-    // need to change these values
-    phoQ[0][1]  = 2610., phoQ[1][1]  = 2603.;
-    phoQ[2][1]  = 2757., phoQ[3][1]  = 2894.;
-    phoQ[4][1]  = 2740., phoQ[5][1]  = 2821.;
-    phoQ[6][1]  = 2660., phoQ[7][1]  = 2628.;
-    phoQ[8][1]  = 2600., phoQ[9][1]  = 2761.;
-    phoQ[10][1] = 2610., phoQ[11][1] = 2603.;
-    phoQ[12][1] = 2757., phoQ[13][1] = 2894.;
-    phoQ[14][1] = 2740., phoQ[15][1] = 2821.;
-    phoQ[16][1] = 2660., phoQ[17][1] = 2628.;
 
+    // changed to work for corner crystals in files sorted using sort18.f
+    phoQ[2][1] = 2596., phoQ[2][1] = 2625.;
+    phoQ[4][1] = 2763., phoQ[6][1] = 2902.;
+    phoQ[8][1] = 2728., phoQ[9][1] = 2800.;
+    phoQ[11][1] = 2656., phoQ[13][1] = 2629.; 
+    phoQ[15][1] = 2588., phoQ[17][1] = 2742.; 
+    
     photopeaksInitByChan = kTRUE;
     
   }
@@ -1050,7 +1046,9 @@ Int_t TLab::GetMaxQ(){
 
 Bool_t TLab::DoFitPhotopeaks(){
 
-  if( runNumberInt == 49801 )
+  if( runNumberInt == 49801   ||
+      runNumberInt == 49802   ||
+      runNumberInt == 4980009   )
     return kFALSE;
   else
     return kTRUE;
@@ -1506,28 +1504,28 @@ void TLab::CalculateAsymmetry(){
     
     // determine delta phi
     // for this event
-    if((A[1]&&B[1])||
-       (A[3]&&B[3])||
-       (A[7]&&B[7])||
-       (A[5]&&B[5]))
+    if((A[0]&&B[0])||
+       (A[2]&&B[2])||
+       (A[6]&&B[6])||
+       (A[8]&&B[8]))
       AB000 = kTRUE;
     
-    if((A[1]&&B[3])||
-       (A[3]&&B[7])||
-       (A[7]&&B[5])||
-       (A[5]&&B[1]))
+    if((A[0]&&B[6])||
+       (A[6]&&B[8])||
+       (A[8]&&B[2])||
+       (A[2]&&B[0]))
       AB090 = kTRUE;
     
-    if((A[1]&&B[7])||
-       (A[3]&&B[5])||
-       (A[7]&&B[1])||
-       (A[5]&&B[3]))
+    if((A[0]&&B[8])||
+       (A[6]&&B[2])||
+       (A[8]&&B[0])||
+       (A[2]&&B[6]))
       AB180 = kTRUE;
     
-    if((A[1]&&B[5])||
-       (A[3]&&B[1])||
-       (A[7]&&B[3])||
-       (A[5]&&B[7]))
+    if((A[0]&&B[2])||
+       (A[6]&&B[0])||
+       (A[8]&&B[6])||
+       (A[2]&&B[8]))
       AB270 = kTRUE;
     
     // check that only one combination
@@ -1609,6 +1607,7 @@ Float_t TLab::RandomLabPhi(){
   return phi;
 }
 
+// randomizing phi to check that there wasn't false asymmetry (bug check)
 Bool_t  TLab::RandomGoodLabPhi(Float_t phi, 
 			       Int_t crystal){
   
