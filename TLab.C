@@ -155,6 +155,12 @@ void TLab::SetEventNumbers(Int_t run){
     nAND = 170907253; // 469 - AND (468 was interupted)
     nOR2 = 1269750;   // 470 - OR
   }
+  else if(run == 14700){
+    // Runs: 467 (or), 469 (AND), 470 (OR)
+    nOR1 = 100000; // 467 - OR prior to power up/down 
+    nAND = 1000000; // 469 - AND (468 was interupted)
+    nOR2 = 100000; // 470 - OR
+  }
   else if(run == 123){
     nOR1 = 11111111;
     nAND = 22222222;
@@ -172,6 +178,12 @@ void TLab::SetEventNumbers(Int_t run){
     nOR2 = 0;
     oneRun = kTRUE;
   }
+  else if(run == 4985){
+    nOR1 = 0;
+    nAND = 4999; //AND on
+    nOR2 = 0;
+    oneRun = kTRUE;
+  }
   else if(run == 4980){
     nOR1 = 0;
     nAND = 500000; 
@@ -180,7 +192,13 @@ void TLab::SetEventNumbers(Int_t run){
   }
   else if(run == 5010){
     nOR1 = 0;
-    nAND = 2792427; 
+    nAND = 1000000; 
+    nOR2 = 0;
+    oneRun = kTRUE;
+  }
+  else if(run == 501500){
+    nOR1 = 0;
+    nAND = 500; 
     nOR2 = 0;
     oneRun = kTRUE;
   }
@@ -247,14 +265,6 @@ void TLab::MakeRawDataTreeFile(){
   
   for(Int_t i = 0 ; i < nChannels ; i++ ){
 
-    // usually three runs: OR, AND, OR
-    // for(Int_t run = 0 ; run < nRuns ; run++ ){    
-    //   nameHist.Form("hQ%d_%d",i,run);
-    //   titleHist.Form("hQ%d_%d;QDC bin;Counts",i,run);
-    //   hQ[i][run] = new TH1F(nameHist,titleHist,4096,0,4096);
-    // }
-
-    
     //  pre-run OR data 
     Int_t run = 0; 
     nameHist.Form("hQ_%d_%d",run,i);
@@ -266,11 +276,7 @@ void TLab::MakeRawDataTreeFile(){
     nameHist.Form("hQ_%d_%d",run,i);
     titleHist.Form("hQ_%d_%d;QDC bin;Counts",run,i);
     hQ_1[i] = new TH1F(nameHist,titleHist,4096,0,4096);
-
-    // nameHist.Form("hQQ_%d_%d",run,i);
-//     titleHist.Form("hQQ_%d_%d;QDC bin;Counts",run,i);
-//    hQQ_1[i] = new TH1F(nameHist,titleHist,4096,0,4096);
-      
+    
     // post-run OR data 
     run = 2;
     nameHist.Form("hQ_%d_%d",run,i);
@@ -366,6 +372,7 @@ void TLab::MakeRawDataTreeFile(){
   
 
   rawDataTree->Write();
+  rawDataTree->Delete();
   
   // writes the histograms
   rootFileRawData->Write();
@@ -376,22 +383,45 @@ void TLab::MakeRawDataTreeFile(){
 
 Bool_t TLab::QIsInComptonRange(Float_t Q, Int_t ch){
   
-  // run 501
-  switch(ch){
-  case 0  : if( Q > 900  && Q < 2300 ) return kTRUE;
-  case 1  : if( Q > 900  && Q < 2300 ) return kTRUE;
-  case 2  : if( Q > 800  && Q < 2400 ) return kTRUE;
-  case 3  : if( Q > 900  && Q < 2600 ) return kTRUE;
-  case 4  : if( Q > 1000 && Q < 2400 ) return kTRUE;
-  case 5  : if( Q > 1000 && Q < 2400 ) return kTRUE;
-  case 6  : if( Q > 900  && Q < 2400 ) return kTRUE;
-  case 7  : if( Q > 900  && Q < 2300 ) return kTRUE;
-  case 8  : if( Q > 900  && Q < 2300 ) return kTRUE;
-  case 9  : if( Q > 1000 && Q < 2400 ) return kTRUE;
-  }
-
-  return kFALSE;
+  Float_t lowQ  = Q;
+  Float_t highQ = 0;
   
+  // mimic 5010 to data with no outer ch photopeaks
+  if(runNumberInt==5010)
+    highQ = Q;
+
+  if(oneRun){
+    // run 501 (should be okay for 498)
+    switch(ch){
+    case 0  : if( lowQ > 1100 && highQ < 2200 ) return kTRUE; break;
+    case 1  : if( lowQ > 1050 && highQ < 2200 ) return kTRUE; break;
+    case 2  : if( lowQ >  900 && highQ < 2100 ) return kTRUE; break;
+    case 3  : if( lowQ > 1000 && highQ < 2400 ) return kTRUE; break;
+    case 4  : if( lowQ > 1100 && highQ < 2200 ) return kTRUE; break;
+    case 5  : if( lowQ > 1100 && highQ < 2300 ) return kTRUE; break;
+    case 6  : if( lowQ > 1000 && highQ < 2400 ) return kTRUE; break;
+    case 7  : if( lowQ > 900  && highQ < 2200 ) return kTRUE; break;
+    case 8  : if( lowQ > 975  && highQ < 2200 ) return kTRUE; break;
+    case 9  : if( lowQ > 1000 && highQ < 2300 ) return kTRUE; break;
+    }
+  }
+  else if(runNumberInt==1470  ||
+	  runNumberInt==14700 ){
+    switch(ch){
+    case 0  : if( lowQ > 1100 && highQ < 2200 ) return kTRUE; break;
+    case 1  : if( lowQ > 1050 && highQ < 2200 ) return kTRUE; break;
+    case 2  : if( lowQ >  900 && highQ < 2100 ) return kTRUE; break;
+    case 3  : if( lowQ > 1000 && highQ < 2400 ) return kTRUE; break;
+    case 4  : if( lowQ > 1100 && highQ < 2200 ) return kTRUE; break;
+    case 5  : if( lowQ > 1100 && highQ < 2300 ) return kTRUE; break;
+    case 6  : if( lowQ > 1000 && highQ < 2400 ) return kTRUE; break;
+    case 7  : if( lowQ > 900  && highQ < 2200 ) return kTRUE; break;
+    case 8  : if( lowQ > 975  && highQ < 2200 ) return kTRUE; break;
+    case 9  : if( lowQ > 1000 && highQ < 2300 ) return kTRUE; break;
+    }
+  }
+  return kFALSE;
+    
 }
 
 Bool_t TLab::CalibratedROOTFileExists(){
@@ -465,7 +495,8 @@ void TLab::MakeCalibratedDataTreeFile(){
       temp_phoQ = GetPhotopeak(i) - GetPedestal(i);
       HWHM[i][run] = HWHM[i][run]*511./temp_phoQ;
 
-      if(run==1 || commentAll)
+      if(run==DefaultPhotopeakRun(i) || 
+	 commentAll)
 	cout << "HWHM["<< i 
 	     << "]["   << run 
 	     << "] = " << HWHM[i][run] 
@@ -478,7 +509,9 @@ void TLab::MakeCalibratedDataTreeFile(){
        << rootFileRawName << endl;
   
   // read from this
-  rootFileRawData = new TFile(rootFileRawName);
+  rootFileRawData = TFile::Open(rootFileRawName);
+  //rootFileRawData = new TFile(rootFileRawName);
+  
   rawDataTree     = (TTree*)rootFileRawData->Get("rawDataTree");
   
   // write to this
@@ -647,6 +680,9 @@ void TLab::MakeCalibratedDataTreeFile(){
   
   rootFileCalData->Write();
   
+  rawDataTree->Delete();
+  rootFileRawData->Close();
+  
 }
 
 void TLab::SetPedestals(){
@@ -665,7 +701,9 @@ void TLab::SetPedestals(){
   
   cout << endl;
   cout << " Reading " << rootFileRawName << endl;
-  rootFileRawData = new TFile(rootFileRawName);
+  
+  rootFileRawData = TFile::Open(rootFileRawName);
+  //rootFileRawData = new TFile(rootFileRawName);
   
   TString histName = "";
   
@@ -697,8 +735,14 @@ void TLab::SetPedestals(){
       GetBinCenter(hQ_1[i]->GetMaximumBin());
     
     // central channels may have no pedestal 
-    if( pedQ[i][run] > 800.)
-      pedQ[i][run] = 633.0;
+    if( pedQ[i][run] > 800.){
+      
+      if     (i==2)
+	pedQ[i][run] = 609.0;
+      else if(i==7)
+	pedQ[i][run] = 633.0;
+
+    }
     //-----------------
     
 
@@ -743,9 +787,7 @@ void TLab::FillQSumHistos(){
   cout << endl;
   cout << " Reading " << rootFileRawName << endl;
   
-  //TFile *file = TFile::Open(rootFileRawName);
   rootFileRawData = TFile::Open(rootFileRawName,"update");
-  //new TFile(rootFileRawName);
 
   rawDataTree     = (TTree*)rootFileRawData->Get("rawDataTree");
 
@@ -779,25 +821,27 @@ void TLab::FillQSumHistos(){
       if( ch > 4 )
 	centralIndex = 7;
       
-      Q_sum = Q[ch] + Q[centralIndex] - GetPedestal(centralIndex);
+      Q_sum = Q[ch] + Q[centralIndex]- GetPedestal(centralIndex);
 
-      if   ( ch == 2 || ch == 7 ) 
-	hQQ_1[ch]->Fill(Q[ch]);
+      if   ( ch == 2 || ch == 7  ) {
+	
+	if(Q[ch] > 800.)
+	  hQQ_1[ch]->Fill(Q[ch]);
+	
+      }
       else if( QIsInComptonRange(Q[ch],ch) &&
 	       QIsInComptonRange(Q[centralIndex],centralIndex) ){
 	hQQ_1[ch]->Fill(Q_sum);
-
-// 	if( Q_sum < 700 ){
-// 	  cout << " Q[ch] = " << Q[ch] << endl;
-// 	  cout << " Q[centralIndex] = " << Q[c] << endl;
-// 	  cout << " Q[ch] = " << Q[ch] << endl;
-//      }
       
       }
     }
   }
   // append
   rootFileRawData->Write();
+  
+  //delete tree pointer?
+
+  rootFileRawData->Close();
   
 }
 
@@ -809,35 +853,81 @@ void TLab::SetPhotopeaks(){
   
   InitPhotopeaks();
   
-  //FitPhotopeaks();
-
+  if(DoFitPhotopeaks()){
+    
+    Char_t fitPhoto = 'n';
+    
+    cout << endl;
+    cout << " Do you want to fit the photopeaks? " << endl;
+    cout << " Answer y or n (default is 'n')  " << endl;
+    cin >>  fitPhoto;
+    
+    if(fitPhoto=='y')
+      FitPhotopeaks();
+  }
+  else{
+    cout << endl;
+    cout << " Using default values " << endl;
+  }
+  
 }
 
 
 void TLab::InitPhotopeaks(){
 
   cout << endl;
-  cout << "--------------------------" << endl;
   cout << "  Initialising Photopeaks " <<endl;
 
   
   for (Int_t ch = 0 ; ch < nChannels ; ch++){
     for (Int_t run = 0 ; run < nRuns ; run++){
-      phoQ[ch][run] = 2600.;
-      HWHM[ch][run] = 125;
+      
+      if(oneRun){
+	phoQ[ch][run] = 0.;
+	HWHM[ch][run] = 0.;
+      }
+      else{
+	phoQ[ch][run] = 2600.;
+	HWHM[ch][run] = 125;
+      }
     }
   }
   
-  if( oneRun ){
+  if(runNumberInt==1460){
+    phoQ[0][0] = 3340., phoQ[1][0] = 3420.;
+    phoQ[2][1] = 3300., phoQ[3][0] = 3140.;
+    phoQ[4][0] = 3340., phoQ[5][0] = 3500.;
+    phoQ[6][0] = 3440., phoQ[7][1] = 3660.; 
+    phoQ[8][0] = 3410., phoQ[9][0] = 3050.; 
+  
+    photopeaksInitByChan = kTRUE;
     
+  }
+  if(runNumberInt==1470 || 
+     runNumberInt==14700 ){
+  
+    // channel 9 drifted from previous run
+    phoQ[0][2] = 3350., phoQ[1][2] = 3420.;
+    phoQ[2][1] = 3300., phoQ[3][2] = 3140.;
+    phoQ[4][2] = 3340., phoQ[5][2] = 3500.;
+    phoQ[6][2] = 3440., phoQ[7][1] = 3660.; 
+    phoQ[8][2] = 3410., phoQ[9][2] = 2800.; 
+  
+    photopeaksInitByChan = kTRUE;
+    
+  }
+  else if( oneRun ){
     cout << endl;
     cout << " Using run 501 values " << endl;
     
-    phoQ[0][1] = 2610., phoQ[1][1] = 2603.;
-    phoQ[2][1] = 2757., phoQ[3][1] = 2894.;
-    phoQ[4][1] = 2740., phoQ[5][1] = 2821.;
-    phoQ[6][1] = 2660., phoQ[7][1] = 2628.; 
-    phoQ[8][1] = 2600., phoQ[9][1] = 2761.; 
+    phoQ[0][1] = 2596., phoQ[1][1] = 2625.;
+    phoQ[2][1] = 2763., phoQ[3][1] = 2902.;
+    phoQ[4][1] = 2728., phoQ[5][1] = 2800.;
+    phoQ[6][1] = 2656., phoQ[7][1] = 2629.; 
+    phoQ[8][1] = 2588., phoQ[9][1] = 2742.; 
+
+    photopeaksInitByChan = kTRUE;
+    
   }
   
 }
@@ -857,48 +947,55 @@ Float_t TLab::GetPhotopeak(Int_t channel){
   return phoQ[channel][DefaultPhotopeakRun(channel)]; 
 }
 
-Int_t TLab::GetMinQ(Int_t ch){
+Int_t TLab::GetMinQ(){
 
-  Int_t minQ = 2000;
+  Int_t minQ = 2200;
 
-  if     ( runNumberInt == 49801 ){
-    
-    if     (ch == 2)
-      minQ = 1999;
-    else if(ch == 7)
-      minQ = 2001;
-    
+  if    ( runNumberInt == 1460 ){
+    minQ = 2700;
   }
+  else if( runNumberInt == 1470  ||
+	   runNumberInt == 14700){
+    minQ = 2500;
+  }
+
+  
   
   return minQ;
 
 }
 
-Int_t TLab::GetMaxQ(Int_t ch){
+Int_t TLab::GetMaxQ(){
 
-  Int_t maxQ = 4500;
+  Int_t maxQ = 3600;
 
-  if     ( runNumberInt == 49801 ){
-    
-    if     (ch == 2)
-      maxQ = 4499;
-    else if(ch == 7)
-      maxQ = 4501;
-    
+  if( runNumberInt == 1460 ||
+      runNumberInt == 1470 ||
+      runNumberInt == 14700 ){
+    maxQ = 3900;
   }
+  
   return maxQ;
+}
+
+Bool_t TLab::DoFitPhotopeaks(){
+
+  if( runNumberInt == 49801 )
+    return kFALSE;
+  else
+    return kTRUE;
 }
 
 void TLab::FitPhotopeaks(){
 
   cout << endl;
-  cout << " Setting Photopeaks " << endl;
+  cout << " Fitting Photopeaks " << endl;
   
   TString rawFileName;
   
   cout << endl;
   cout << " Reading " << rootFileRawName << endl;
-  rootFileRawData = new TFile(rootFileRawName);
+  rootFileRawData = TFile::Open(rootFileRawName,"update");
   
   SetStyle();
 	       
@@ -913,53 +1010,80 @@ void TLab::FitPhotopeaks(){
 
   Int_t minQ = 2000;
   Int_t maxQ = 4500;
-    
   
+  Int_t fitRange = 250;
+
+  Bool_t comments = kFALSE;
+  Bool_t savePlotPDFs = kFALSE;
+  
+  Int_t run;
+
   for( Int_t i = 0 ; i < nChannels ; i++ ){
-    
+
+    // histogram range
+    minQ = GetMinQ();
+    maxQ = GetMaxQ();
 
     //----------------------------------------------
+    // main run AND data 
+    run = 1;
+    
+    histName.Form("hQ_%d_%d",run,i);
+    hQ_1[i] = (TH1F*)rootFileRawData->Get(histName);
+    hQ_1[i]->GetXaxis()->SetRangeUser(minQ,maxQ);
+
+    maxBinQ = hQ_1[i]->GetXaxis()->
+      GetBinCenter(hQ_1[i]->GetMaximumBin());
+
+    if(comments){
+      cout << " ------------------------------------ "  << endl;
+      cout << " Run 1 channel " << i << " photopeak = " 
+	   << GetPhotopeak(i) << endl;
+      cout << " ------------------------------------ "  << endl;
+    }
+    
+    phoQfit = new TF1("phoQfit",
+		      "[0]*exp(-0.5*(((x-[1])/[2])^2))",
+		      maxBinQ-fitRange,
+		      maxBinQ+fitRange);
+
+    phoQfit->SetParameters(10.,GetPhotopeak(i),100.);
+    phoQfit->SetLineColor(2);
+
+    hQ_1[i]->Fit("phoQfit","RQ");
+    
+    sprintf(plotName,"../Plots/%d_hQ_%d_%d.pdf",
+	    runNumberInt,
+	    run,i);
+    
+    phoQ[i][run] = phoQfit->GetParameter(1.);
+    HWHM[i][run] = (phoQfit->GetParameter(2.))*Sqrt(Log(2.));
+    
+    if(savePlotPDFs)
+      canvas->SaveAs(plotName);
+    //----------------------------------------------
+    
+    if(oneRun)
+      continue;
+    
+    //----------------------------------------------
     // pre-run OR data 
-    Int_t run = 0;
+    run = 0;
     
     histName.Form("hQ_%d_%d",run,i);
     
     hQ_0[i] = (TH1F*)rootFileRawData->Get(histName);
     
-    // histogram range
-    minQ = GetMinQ(i);
-    maxQ = GetMaxQ(i);
-
     hQ_0[i]->GetXaxis()->SetRangeUser(minQ,maxQ);
 
     maxBinQ = hQ_0[i]->GetXaxis()->
       GetBinCenter(hQ_0[i]->GetMaximumBin());
+        
+    phoQfit->SetRange(maxBinQ-fitRange,maxBinQ+fitRange);
+    phoQfit->SetParameters(10.,GetPhotopeak(i),100.);
     
-
-    phoQfit = new TF1("phoQfit",
-		      "[0]*exp(-0.5*(((x-[1])/[2])^2))",
-		      maxBinQ-250,maxBinQ+250);
-    
-    phoQfit->SetLineColor(2);
-    
-    
-    phoQfit->SetParameters(10.,3000.,100.);
-    
-    // adjust parameters for some channels
-    // To do: move to separate function
-    // with run number as argument
-    // if      (i == 9)
-    //   phoQfit->SetParameters(10.,2800.,100.);
-    // else if (i == 2)
-    //   phoQfit->SetParameters(10.,3200.,100.);
-    
-    //phoQfit->SetParLimits(1.,2700.,3700.);
-    //phoQfit->SetParLimits(2.,100.,300.);
-    
-    if      (i == 3 ){
-      phoQfit->SetParameters(10.,3200.,100.);
-      phoQfit->SetParLimits(1.,3000.,3400.);
-    }
+    // phoQfit->SetParLimits(1.,2700.,3700.);
+    // phoQfit->SetParLimits(2.,100.,300.);
 
     hQ_0[i]->Fit("phoQfit","RQ");
     
@@ -970,50 +1094,25 @@ void TLab::FitPhotopeaks(){
     phoQ[i][run] = phoQfit->GetParameter(1.);
     HWHM[i][run] = phoQfit->GetParameter(2.)*Sqrt(Log(2.));
     
-    canvas->SaveAs(plotName);
+    if(savePlotPDFs)
+      canvas->SaveAs(plotName);
     //----------------------------------------------
     
-    //----------------------------------------------
-    // main run AND data 
-    run = 1;
     
-    histName.Form("hQ_%d_%d",run,i);
-    hQ_1[i] = (TH1F*)rootFileRawData->Get(histName);
-    hQ_1[i]->GetXaxis()->SetRangeUser(2400,4000);
-    maxBinQ = hQ_1[i]->GetXaxis()->
-      GetBinCenter(hQ_1[i]->GetMaximumBin());
-
-    // //!!!!!
-    // histName.Form("hQQ_%d_%d",run,i);
-    // hQ_1[i] = (TH1F*)rootFileRawData->Get(histName);
-    // hQ_1[i]->GetXaxis()->SetRangeUser(2400,4000);
-    // maxBinQ = hQ_1[i]->GetXaxis()->
-    //   GetBinCenter(hQ_1[i]->GetMaximumBin());
-   
-
-    
-    hQ_1[i]->Fit("phoQfit","RQ");
-    
-    sprintf(plotName,"../Plots/%d_hQ_%d_%d.pdf",
-	    runNumberInt,
-	    run,i);
-    
-    phoQ[i][run] = phoQfit->GetParameter(1.);
-    HWHM[i][run] = (phoQfit->GetParameter(2.))*Sqrt(Log(2.));
-    
-    canvas->SaveAs(plotName);
-    //----------------------------------------------
-
     //----------------------------------------------
     // post-run OR data 
     run = 2;
     
     histName.Form("hQ_%d_%d",run,i);
     hQ_2[i] = (TH1F*)rootFileRawData->Get(histName);
-    hQ_2[i]->GetXaxis()->SetRangeUser(2400,4000);
+    hQ_2[i]->GetXaxis()->SetRangeUser(minQ,maxQ);
+    
     maxBinQ = hQ_2[i]->GetXaxis()->
       GetBinCenter(hQ_2[i]->GetMaximumBin());
     
+    phoQfit->SetRange(maxBinQ-fitRange,maxBinQ+fitRange);
+    //phoQfit->SetParameters(10.,GetPhotopeak(i),100.);
+
     hQ_2[i]->Fit("phoQfit","RQ");
     
     sprintf(plotName,"../Plots/%d_hQ_%d_%d.pdf",
@@ -1023,20 +1122,24 @@ void TLab::FitPhotopeaks(){
     phoQ[i][run] = phoQfit->GetParameter(1.);
     HWHM[i][run] = (phoQfit->GetParameter(2.))*Sqrt(Log(2.));
     
-    canvas->SaveAs(plotName);
+    if(savePlotPDFs)
+      canvas->SaveAs(plotName);
     
   }
     
   for( Int_t run = 0 ; run < nRuns ; run++ ){
     cout << endl;  
     for( Int_t i = 0 ; i < nChannels ; i++ ){
-      cout << " phoQ["<< i << "][" << run 
-	   << "] =  " << phoQ[i][run] << endl;
+      
+      if(run==DefaultPhotopeakRun(i))
+	cout << " phoQ["<< i << "][" << run 
+	     << "] =  " << phoQ[i][run] << endl;
     }
   }
 
   cout << endl;
 
+  rootFileRawData->Write();
   rootFileRawData->Close();
   
 }
@@ -1049,9 +1152,11 @@ Int_t TLab::DefaultPedestalRun(){
     // central channel method TBD
     return 1;
   }
-  else{ 
-    // old runs use the OR data
-    return 2;
+  else{ // OR data method 
+    if(runNumberInt == 1460)
+      return 0;
+    else
+      return 2;
   }
 }
 
@@ -1059,10 +1164,15 @@ Int_t TLab::DefaultPhotopeakRun(Int_t channel){
   
   if( channel == 2  || 
       channel == 7  ||
-      oneRun)
+      oneRun          )
     return 1;
-  else  
-    return 2;
+  else  {
+    if(runNumberInt == 1460 )
+      return 0;
+    else
+      return 2;
+  }
+  
 }
 
 Float_t TLab::ThetaToPhotonEnergy(Float_t theta){
@@ -1130,7 +1240,7 @@ Bool_t TLab::GoodTheta(Float_t theta){
   
   Bool_t goodTheta = kFALSE;
   
-  // Asymmety is minimal below 
+  // Asymmetry is minimal below 
   // 30 degrees but allow
   // for energy resolution
   Float_t thetaRange[2];
@@ -1157,7 +1267,7 @@ void TLab::CalculateAsymmetry(){
     for(Int_t k = 0 ; k < nPhiBins; k++){
       AsymMatrix[j][k] = 0;
     }
- }
+  }
   
   rootFileCalData = new TFile(rootFileCalName);
   
@@ -1203,7 +1313,17 @@ void TLab::CalculateAsymmetry(){
   Float_t totEA = 0.;
   Float_t totEB = 0.;
   Int_t   thBin = -1.;
-    
+  
+  Int_t nTotEnAB   = 0;
+  Int_t nCentralAB = 0;
+  Int_t nOuterAB   = 0;
+
+  cout << endl;
+  cout << endl;
+  cout << " maxEntry = " << maxEntry << endl;
+  cout << endl;
+  cout << endl;
+
   for(Long64_t nEntry = 0 ; nEntry < maxEntry; nEntry++ ){
     
     calDataTree->GetEvent(nEntry);
@@ -1225,6 +1345,8 @@ void TLab::CalculateAsymmetry(){
 	(totEB < minE) ||
 	(totEB > maxE))
       continue;
+
+    nTotEnAB++;
     
     A[4] = kFALSE;
     B[4] = kFALSE;
@@ -1235,6 +1357,7 @@ void TLab::CalculateAsymmetry(){
     // assign theta bin to array A  
     // central crystal
     for (Int_t k = 0 ; k < nThBins; k++){
+      
       if( ( GoodTheta(tHA[4]) ) &&
 	  ( tHA[4] > ThMin[k] ) &&
 	  ( tHA[4] < ThMax[k] )){
@@ -1253,11 +1376,13 @@ void TLab::CalculateAsymmetry(){
       B[4] = kTRUE;
       nB[4]++;
     }
-    
+
     // Central Crystals are always required
     if( !A[4] || !B[4] )
       continue;
-    
+
+    nCentralAB++;
+
     //  Outer crystal selections
     for (Int_t j = 0 ; j < nCrystals ; j++){
       
@@ -1312,8 +1437,8 @@ void TLab::CalculateAsymmetry(){
     // for this event
     if((A[1]&&B[1])||
        (A[3]&&B[3])||
-       (A[5]&&B[5])||
-       (A[7]&&B[7]))
+       (A[7]&&B[7])||
+       (A[5]&&B[5]))
       AB000 = kTRUE;
     
     if((A[1]&&B[3])||
@@ -1329,9 +1454,9 @@ void TLab::CalculateAsymmetry(){
       AB180 = kTRUE;
     
     if((A[1]&&B[5])||
-       (A[5]&&B[7])||
+       (A[3]&&B[1])||
        (A[7]&&B[3])||
-       (A[3]&&B[1]))
+       (A[5]&&B[7]))
       AB270 = kTRUE;
     
     // check that only one combination
@@ -1354,11 +1479,17 @@ void TLab::CalculateAsymmetry(){
       AsymMatrix[thBin][2]+=1.;
     else if(AB270)
       AsymMatrix[thBin][3]+=1.;
-    
+    else
+      nOuterAB--;
+
+    nOuterAB++;
+        
   } // end of : for(Int_t i = 0 ; i < calDa...
 
-  if(nDuplicates!=0)
+  if(nDuplicates!=0){
+    cout << endl;
     cout << " nDuplicates = " << nDuplicates << endl;
+  }
   
   cout << endl;
   cout << " Asymmetry"<<endl;
@@ -1371,6 +1502,16 @@ void TLab::CalculateAsymmetry(){
 	 << " " << AsymMatrix[i][2] << "\t"
 	 << " " << AsymMatrix[i][3] << endl;
     
+  cout << endl;
+  cout << "-------------------------------------------------" << endl;
+  cout << maxEntry   << " total events  "                     << endl;
+  cout << nTotEnAB   << " total energy 450 - 550 For A & B  " << endl;
+  cout << nA[4]      << " Compton scatters in A central "     << endl;
+  cout << nCentralAB << " Compton's in A & B central "        << endl;
+  cout << nOuterAB   << " Compton's in A & B outer & central" << endl;
+  cout << "-------------------------------------------------" << endl;
+  cout << endl;
+
 }
 
 Float_t TLab::RandomLabPhi(){
@@ -1455,14 +1596,17 @@ Float_t TLab::PhotonEnergyToTheta(Float_t energy){
 }
 
 void TLab::GetThetaBinValues(){
-  
-  Float_t thetaBinWidth = (thetaHighEdge - thetaLowEdge)/(Float_t)nThBins;
 
+  Float_t thetaBinWidth = (thetaHighEdge - thetaLowEdge)/(Float_t)nThBins;
+  
   for (Int_t i = 0 ; i < nThBins ; i++){
     ThMin[i] = thetaLowEdge + i*thetaBinWidth;
     ThMax[i] = ThMin[i] + thetaBinWidth;
     plotTheta[i] = ThMin[i] + (ThMax[i] - ThMin[i])/2.;
+
   }
+
+
 }
 
 void TLab::GraphAsymmetry(Char_t option){
@@ -1556,38 +1700,60 @@ void TLab::GraphAsymmetry(Char_t option){
   Float_t aSimTrue[nThBins]={0};
   Float_t aSimTrueE[nThBins]={0};
   
-  Float_t nSim[nThBins][nPhiBins]={{0},{0}};
+  Float_t nSim[nThBins][nPhiBins];
+  
   Float_t nSimInt[nThBins]={0};
-  Float_t nSimTrue[nThBins][nPhiBins]={{0},{0}};
+  Float_t nSimTrue[nThBins][nPhiBins];
   Float_t nSimTrueInt[nThBins]={0};
   
-  Float_t nSimE[nThBins][nPhiBins]={{0},{0}};
+  Float_t nSimE[nThBins][nPhiBins];
   //  Float_t nSimIntE[nThBins]={0};
-  Float_t nSimTrueE[nThBins][nPhiBins]={{0},{0}};
+  Float_t nSimTrueE[nThBins][nPhiBins];
   //  Float_t nSimTrueIntE[nThBins]={0};
   
-  Float_t nSimU[nThBins][nPhiBins]={{0},{0}};
+  
+  Float_t nSimU[nThBins][nPhiBins];
   Float_t nSimUInt[nThBins]={0};
-  Float_t nSimTrueU[nThBins][nPhiBins]={{0},{0}};
+  Float_t nSimTrueU[nThBins][nPhiBins];
   Float_t nSimTrueUInt[nThBins]={0};
   
-  Float_t nSimUE[nThBins][nPhiBins]={{0},{0}};
+  Float_t nSimUE[nThBins][nPhiBins];
   Float_t nSimUIntE[nThBins]={0};
-  Float_t nSimTrueUE[nThBins][nPhiBins]={{0},{0}};
+  Float_t nSimTrueUE[nThBins][nPhiBins];
   Float_t nSimTrueUIntE[nThBins]={0};
   
-  Float_t nSimC[nThBins][nPhiBins]={{0},{0}};
-  Float_t nSimTrueC[nThBins][nPhiBins]={{0},{0}};
+  Float_t nSimC[nThBins][nPhiBins];
+  Float_t nSimTrueC[nThBins][nPhiBins];
   
-  Float_t nSimCE[nThBins][nPhiBins]={{0},{0}};
-  Float_t nSimTrueCE[nThBins][nPhiBins]={{0},{0}};
+  Float_t nSimCE[nThBins][nPhiBins];
+  Float_t nSimTrueCE[nThBins][nPhiBins];
   
-  Float_t nAsymMatrix[nThBins][nPhiBins]={{0},{0}};
+  Float_t nAsymMatrix[nThBins][nPhiBins];
   Float_t nAsymMatrixInt[nThBins] = {0};
   
-  Float_t nAsymMatrixE[nThBins][nPhiBins]={{0},{0}};
+  Float_t nAsymMatrixE[nThBins][nPhiBins];
   //Float_t nAsymMatrixIntE[nThBins] = {0};
   
+  for (Int_t iPhi = 0 ; iPhi < nPhiBins ; iPhi++ )
+    for (Int_t iTh = 0 ; iTh < nThBins ; iTh++ ){
+      nSim[iTh][iPhi] = 0;
+      nSimE[iTh][iPhi] = 0;
+      nSimTrue[iTh][iPhi] = 0;
+      nSimTrueE[iTh][iPhi] = 0;
+      nSimU[iTh][iPhi] = 0;
+      nSimTrueU[iTh][iPhi] = 0;
+      nSimUE[iTh][iPhi] = 0;
+      nSimTrueUE[iTh][iPhi] = 0;
+      nSimC[iTh][iPhi] = 0;
+      nSimTrueC[iTh][iPhi] = 0;
+      nSimCE[iTh][iPhi] = 0;
+      nSimTrueCE[iTh][iPhi] = 0;
+      nAsymMatrix[iTh][iPhi] = 0;
+      nAsymMatrixE[iTh][iPhi] = 0;
+
+    }
+    
+
   Float_t f_aSim[nThBins]={0};
   Float_t f_aSimE[nThBins]={0};
   
@@ -1611,7 +1777,8 @@ void TLab::GraphAsymmetry(Char_t option){
   
   // use 90 and 270 for 90 degrees?
   Bool_t use270 = kTRUE;
-  
+  //use270 = kFALSE;
+
   //  lab calculation (not theory only)
   if( option!='t' ){
     
@@ -1660,7 +1827,7 @@ void TLab::GraphAsymmetry(Char_t option){
 	mu[i] = (AsymMatrix[i][1] - AsymMatrix[i][0]);
 	mu[i] = mu[i]/(AsymMatrix[i][1] + AsymMatrix[i][0]);
 	
-      }
+      }// end of: if (dPhiDiff  == 90){
       if (dPhiDiff  == 180){
 	if( AsymMatrix[i][2] == 0 ) continue; 
 	
