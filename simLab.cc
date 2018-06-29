@@ -325,7 +325,7 @@ Int_t main(int argc, char **argv){
       cout << " ";
       cin  >> option;
       */
-      option = 'b'
+      option = 'b';
       
       if     (option == 'l' ||
 	      option == 'L')
