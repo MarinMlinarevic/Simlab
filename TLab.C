@@ -174,7 +174,7 @@ void TLab::SetEventNumbers(Int_t run){
   //-------
   
   // sorted using old sort10.f code
-    else if(run == 49801){
+  else if(run == 49801){
     nOR1 = 0;
     nAND = 29824032; //AND on
     nOR2 = 0;
@@ -214,15 +214,21 @@ void TLab::SetEventNumbers(Int_t run){
     oneRun = kTRUE;
   }
 
-    else if(run == 49803){
+  else if(run == 49803){
     nOR1 = 0;
     nAND = 50000000; 
     nOR2 = 0;
     oneRun = kTRUE;
   }
-      else if(run == 4980009){
+  else if(run == 4980009){
     nOR1 = 0;
     nAND = 149120032; 
+    nOR2 = 0;
+    oneRun = kTRUE;
+  }
+  else if(run == 498){
+    nOR1 = 0;
+    nAND = 927785295; 
     nOR2 = 0;
     oneRun = kTRUE;
   }
@@ -1060,9 +1066,17 @@ Int_t TLab::GetMaxQ(){
 
 Bool_t TLab::DoFitPhotopeaks(){
 
-  if( runNumberInt == 49801   ||
+  if( runNumberInt == 498     ||
+      runNumberInt == 49801   ||
       runNumberInt == 49802   ||
-      runNumberInt == 4980009   )
+      runNumberInt == 49803   ||
+      runNumberInt == 4980009 ||
+      runNumberInt == 4981019 ||
+      runNumberInt == 4982029 ||
+      runNumberInt == 4983039 ||
+      runNumberInt == 4984049 ||
+      runNumberInt == 4985059 ||
+      runNumberInt == 4986062   )
     return kFALSE;
   else
     return kTRUE;

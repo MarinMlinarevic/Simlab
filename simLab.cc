@@ -313,7 +313,8 @@ Int_t main(int argc, char **argv){
 	  }
 	}// end of: if(strcmp(argv[1],"0")...
       }// end of: else{...
-	
+	    
+      /*
       cout << endl;
       cout << " Graphing Asymmetry " << endl;
       cout << endl;
@@ -322,7 +323,9 @@ Int_t main(int argc, char **argv){
       cout << " l - Lab only " << endl;
       cout << " t - Theory only " << endl;
       cout << " ";
-      cin  >> option; 
+      cin  >> option;
+      */
+      option = 'b'
       
       if     (option == 'l' ||
 	      option == 'L')
