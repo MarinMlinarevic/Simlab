@@ -1007,11 +1007,11 @@ void TLab::InitPhotopeaks(){
     */
 
     // changed to work for corner crystals in files sorted using sort18.f
-    phoQ[2][1] = 2596., phoQ[2][1] = 2625.;
-    phoQ[4][1] = 2763., phoQ[6][1] = 2902.;
-    phoQ[8][1] = 2728., phoQ[9][1] = 2800.;
-    phoQ[11][1] = 2656., phoQ[13][1] = 2629.; 
-    phoQ[15][1] = 2588., phoQ[17][1] = 2742.; 
+    phoQ[1][1] = 2596., phoQ[3][1] = 2625.;
+    phoQ[4][1] = 2763., phoQ[5][1] = 2902.;
+    phoQ[7][1] = 2728., phoQ[10][1] = 2800.;
+    phoQ[12][1] = 2656., phoQ[13][1] = 2629.; 
+    phoQ[14][1] = 2588., phoQ[16][1] = 2742.; 
     
     photopeaksInitByChan = kTRUE;
     
@@ -1533,28 +1533,28 @@ void TLab::CalculateAsymmetry(){
     
     // determine delta phi
     // for this event
-    if((A[0]&&B[0])||
-       (A[2]&&B[2])||
-       (A[6]&&B[6])||
-       (A[8]&&B[8]))
+    if((A[1]&&B[1])||
+       (A[3]&&B[3])||
+       (A[5]&&B[5])||
+       (A[7]&&B[7]))
       AB000 = kTRUE;
     
-    if((A[0]&&B[6])||
-       (A[6]&&B[8])||
-       (A[8]&&B[2])||
-       (A[2]&&B[0]))
+    if((A[1]&&B[3])||
+       (A[3]&&B[7])||
+       (A[7]&&B[5])||
+       (A[5]&&B[1]))
       AB090 = kTRUE;
     
-    if((A[0]&&B[8])||
-       (A[6]&&B[2])||
-       (A[8]&&B[0])||
-       (A[2]&&B[6]))
+    if((A[1]&&B[7])||
+       (A[3]&&B[5])||
+       (A[7]&&B[1])||
+       (A[5]&&B[3]))
       AB180 = kTRUE;
     
-    if((A[0]&&B[2])||
-       (A[6]&&B[0])||
-       (A[8]&&B[6])||
-       (A[2]&&B[8]))
+    if((A[1]&&B[5])||
+       (A[3]&&B[1])||
+       (A[7]&&B[3])||
+       (A[5]&&B[7]))
       AB270 = kTRUE;
     
     // check that only one combination
