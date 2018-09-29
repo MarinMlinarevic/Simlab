@@ -1945,13 +1945,15 @@ void TLab::GraphAsymmetry(Char_t option){
       }
       
       // Only plot points in axis range
-      if(AsPhiDiff[i] < minY  || 
-	 AsPhiDiff[i] > maxY){
-	AsPhiDiff[i] = 0.0; 
-      }
+      //if(AsPhiDiff[i] < minY  || 
+	 //AsPhiDiff[i] > maxY){
+	//AsPhiDiff[i] = 0.0; 
+      //}
       
       cout << " AsPhiDiff[" << i << "] = " 
 	 <<  AsPhiDiff[i] << endl;
+         cout << " AePhiDiff[" << i << "] = " 
+	 <<  AePhiDiff[i] << endl;
       
     } // end of : for (Int_t i = 0 ; i < nThB
     
@@ -1982,6 +1984,9 @@ void TLab::GraphAsymmetry(Char_t option){
       aTheory1[i] = theory->rho1(plotTheta[i],semiSpan);
       plotTheta[i] = plotTheta[i]*RadToDeg();
  
+    cout << "Theory[" << i << "] = " << aTheory[i] << endl
+    cout << "plotTheta[" << i << "] = " << plotTheta[i] << endl
+
     }
     
   }// end of:  if( option=='t'
