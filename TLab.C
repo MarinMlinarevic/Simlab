@@ -934,11 +934,12 @@ void TLab::SetPhotopeaks(){
     
     Char_t fitPhoto = 'n';
     
-    cout << endl;
-    cout << " Do you want to fit the photopeaks? " << endl;
-    cout << " Answer y or n (default is 'n')  " << endl;
-    cin >>  fitPhoto;
-    
+    // cout << endl;
+    // cout << " Do you want to fit the photopeaks? " << endl;
+    // cout << " Answer y or n (default is 'n')  " << endl;
+    // cin >>  fitPhoto;
+    fitPhoto = 'n'
+
     if(fitPhoto=='y')
       FitPhotopeaks();
   }
@@ -1984,8 +1985,8 @@ void TLab::GraphAsymmetry(Char_t option){
       aTheory1[i] = theory->rho1(plotTheta[i],semiSpan);
       plotTheta[i] = plotTheta[i]*RadToDeg();
  
-    cout << "Theory[" << i << "] = " << aTheory[i] << endl
-    cout << "plotTheta[" << i << "] = " << plotTheta[i] << endl
+    cout << "Theory[" << i << "] = " << aTheory[i] << endl;
+    cout << "plotTheta[" << i << "] = " << plotTheta[i] << endl;
 
     }
     
