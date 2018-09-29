@@ -938,7 +938,7 @@ void TLab::SetPhotopeaks(){
     // cout << " Do you want to fit the photopeaks? " << endl;
     // cout << " Answer y or n (default is 'n')  " << endl;
     // cin >>  fitPhoto;
-    fitPhoto = 'n'
+    fitPhoto = 'n';
 
     if(fitPhoto=='y')
       FitPhotopeaks();
