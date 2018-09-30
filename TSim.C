@@ -2564,49 +2564,6 @@ Int_t TSim::CalculateAsymmetryLab(TString inputFileNumber){
    }
    cout << endl;
    
-  cout << endl;
-  cout << "SIMULATED LAB ENHANCEMENT" << endl;
-    for (Int_t i = 0 ; i < nThbins; i++){
-      cout << " A_L1[" << i << "] = " << A_L1[i] << endl;
-    }
-  cout << endl;
-  cout << "SIMULATED LAB ENHANCEMENT ERRORS" << endl;
-    for (Int_t i = 0 ; i < nThbins; i++){
-      cout << " A_L1_E[" << i 
-        << "] = " << A_L1_E[i] << endl;
-    }
-  cout << endl;
-  cout << "TRUE SIMULATED LAB ENHANCEMENT" << endl;
-    for (Int_t i = 0 ; i < nThbins; i++){
-    cout << " A_L2[" << i 
-        << "] = " << A_L2[i] << endl;
-    }
-  cout << endl;
-  cout << "TRUE SIMULATED LAB ENHANCEMENT ERRORS" << endl;
-    for (Int_t i = 0 ; i < nThbins; i++){
-    cout << " A_L2_E[" << i 
-        << "] = " << A_L2_E[i] << endl;
-    }
-  cout << endl;
-  cout << "THEORY ENHANCEMENT" << endl;
-    for (Int_t i = 0 ; i < nThbins; i++){
-    cout << " aTheory[" << i 
-        << "] = " << aTheory[i] << endl;
-    }
-  cout << endl;
-  cout << "THEORY ENHANCEMENT ERORS" << endl;
-    for (Int_t i = 0 ; i < nThbins; i++){
-    cout << " aTheoryE[" << i 
-        << "] = " << aTheoryE[i] << endl;
-    }
-  cout << endl;
-  cout << "THETA VALUES FOR ENHANCEMENT PLOT" << endl;
-    for (Int_t i = 0 ; i < nThbins; i++){
-    cout << " plotTheta[" << i 
-        << "] = " << plotTheta[i] << endl;
-    }
-  cout << endl;
-
    return 0;
 
 } //end of: TSim::CalculateAsymmetryLab
@@ -2956,6 +2913,49 @@ TCanvas *canvas = new TCanvas("canvas","canvas",
 
   grMu->Draw("P E");
   
+  cout << endl;
+  cout << "SIMULATED LAB ENHANCEMENT" << endl;
+    for (Int_t i = 0 ; i < nThbins; i++){
+      cout << " A_L1[" << i << "] = " << A_L1[i] << endl;
+    }
+  cout << endl;
+  cout << "SIMULATED LAB ENHANCEMENT ERRORS" << endl;
+    for (Int_t i = 0 ; i < nThbins; i++){
+      cout << " A_L1_E[" << i 
+        << "] = " << A_L1_E[i] << endl;
+    }
+  cout << endl;
+  cout << "TRUE SIMULATED LAB ENHANCEMENT" << endl;
+    for (Int_t i = 0 ; i < nThbins; i++){
+    cout << " A_L2[" << i 
+        << "] = " << A_L2[i] << endl;
+    }
+  cout << endl;
+  cout << "TRUE SIMULATED LAB ENHANCEMENT ERRORS" << endl;
+    for (Int_t i = 0 ; i < nThbins; i++){
+    cout << " A_L2_E[" << i 
+        << "] = " << A_L2_E[i] << endl;
+    }
+  cout << endl;
+  cout << "THEORY ENHANCEMENT" << endl;
+    for (Int_t i = 0 ; i < nThbins; i++){
+    cout << " aTheory[" << i 
+        << "] = " << aTheory[i] << endl;
+    }
+  cout << endl;
+  cout << "THEORY ENHANCEMENT ERORS" << endl;
+    for (Int_t i = 0 ; i < nThbins; i++){
+    cout << " aTheoryE[" << i 
+        << "] = " << aTheoryE[i] << endl;
+    }
+  cout << endl;
+  cout << "THETA VALUES FOR ENHANCEMENT PLOT" << endl;
+    for (Int_t i = 0 ; i < nThbins; i++){
+    cout << " plotTheta[" << i 
+        << "] = " << plotTheta[i] << endl;
+    }
+  cout << endl;
+
   cout << "  GraphAsymmetryLab   " << endl;
   cout << "--------------------- " << endl;
   cout << endl;
