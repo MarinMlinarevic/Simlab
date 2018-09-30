@@ -2817,6 +2817,9 @@ TCanvas *canvas = new TCanvas("canvas","canvas",
       }
   }
   
+  maxY = 10.0
+  minY = 0.0
+
   hr = canvas->DrawFrame(thetaLowEdge,minY,thetaHighEdge,maxY);
   hr->GetXaxis()->SetTitle("#theta (deg)");
 
@@ -3599,9 +3602,35 @@ void TSim::GraphAsymmetrySim(TString inputFileNumber1,
 	A_L1[i] = N_dPhi_X[i][bin090];
 	A_L1[i] = A_L1[i]/(N_dPhi_X[i][0]);
 	
-// 	cout << endl;
-// 	cout << " A_L1[" << i 
-// 	     << "] = " << A_L1[i] << endl;
+	cout << endl;
+  cout << "SIMULATED LAB ENHANCEMENT" << endl;
+	cout << " A_L1[" << i 
+	     << "] = " << A_L1[i] << endl;
+  cout << endl;
+  cout << "SIMULATED LAB ENHANCEMENT ERRORS" << endl;
+	cout << " A_L1_E[" << i 
+	     << "] = " << A_L1_E[i] << endl;
+  cout << endl;
+    cout << "TRUE SIMULATED LAB ENHANCEMENT" << endl;
+	cout << " A_L2[" << i 
+	     << "] = " << A_L2[i] << endl;
+  cout << endl;
+  cout << "TRUE SIMULATED LAB ENHANCEMENT ERRORS" << endl;
+	cout << " A_L2_E[" << i 
+	     << "] = " << A_L2_E[i] << endl;
+  cout << endl;
+  cout << "THEORY ENHANCEMENT" << endl;
+	cout << " aTheory[" << i 
+	     << "] = " << aTheory[i] << endl;
+  cout << endl;
+  cout << "THEORY ENHANCEMENT ERORS" << endl;
+	cout << " aTheoryE[" << i 
+	     << "] = " << aTheoryE[i] << endl;
+  cout << endl;
+    cout << "THETA VALUES FOR ENHANCEMENT PLOT" << endl;
+	cout << " plotTheta[" << i 
+	     << "] = " << plotTheta[i] << endl;
+  cout << endl;
 	
 	//A_L1[i] = A_L1[i]+N_dPhi_X[i][bin270];
 	//A_L1[i] = A_L1[i]/(2.*N_dPhi_X[i][0]);
